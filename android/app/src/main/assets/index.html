@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>X-BEGADANG — Neuro-Sleep Architecture & Sunnah Wake Engine</title>
+  <meta name="description" content="Aplikasi Mandiri Manajemen Tidur, Siklus 90 Menit Ultradian, Smart Qailullah, dan Kebiasaan Bangun Subuh Sesuai Sains & Sunnah.">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#070A11">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/png" href="icon-192.png">
+
+  <style>
+    /* ==========================================================================
+       X-BEGADANG MASTER STYLESHEET — MATTE OBSIDIAN LUXURY SUITE
+       ========================================================================== */
+    :root {
+      --bg-dark: #070A11;
+      --card-bg: #0F1523;
+      --card-hover: #151D2E;
+      --border-subtle: #1E293B;
+      --border-glow: #334155;
+      
+      --accent-cyan: #06B6D4;
+      --accent-cyan-glow: rgba(6, 182, 212, 0.15);
+      --accent-gold: #F59E0B;
+      --accent-gold-glow: rgba(245, 158, 11, 0.15);
+      --accent-emerald: #10B981;
+      --accent-emerald-glow: rgba(16, 185, 129, 0.15);
+      --accent-rose: #EF4444;
+      --accent-rose-glow: rgba(239, 68, 68, 0.15);
+
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-full: 9999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      padding-bottom: 84px; /* space for mobile bottom bar */
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070A11;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1E293B;
+      border-radius: var(--radius-full);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+
+    /* ==========================================================================
+       TOP APP BAR / HEADER
+       ========================================================================== */
+    header.app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7, 10, 17, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo-wrap {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0F172A, #0284C7);
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px var(--accent-cyan-glow);
+    }
+
+    .brand-titles h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      background: linear-gradient(to right, #FFFFFF, #94A3B8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.6px;
+      -webkit-text-fill-color: initial;
+    }
+
+    .header-center-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .header-clock {
+      font-size: 1.15rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-main);
+      letter-spacing: 1px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .badge-tz {
+      font-size: 0.65rem;
+      font-weight: 800;
+      background: rgba(6, 182, 212, 0.18);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .header-date {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .header-prayer-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      color: var(--text-main);
+    }
+
+    .dot-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 8px var(--accent-emerald);
+      animation: pulse-dot 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-icon:hover {
+      background: var(--card-hover);
+      color: var(--text-main);
+      border-color: var(--accent-cyan);
+    }
+
+    /* Active Alarm Banner */
+    #active-alarm-banner {
+      display: none;
+      background: linear-gradient(90deg, #1E1B4B, #0F172A);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.4);
+      padding: 8px 18px;
+      font-size: 0.8rem;
+      color: #E0E7FF;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* ==========================================================================
+       MAIN CONTAINER & NAVIGATION
+       ========================================================================== */
+    main.app-body {
+      max-width: 1040px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px 16px;
+      flex: 1;
+    }
+
+    /* Desktop Navigation Tabs */
+    nav.desktop-nav {
+      display: flex;
+      gap: 8px;
+      background: var(--card-bg);
+      padding: 6px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    .nav-tab-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .nav-tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .nav-tab-btn.active {
+      background: #151D2E;
+      color: var(--accent-cyan);
+      box-shadow: 0 0 14px rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    /* Views */
+    .tab-view {
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+    .tab-view.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       DASHBOARD VIEW
+       ========================================================================== */
+    .hero-circadian-card {
+      background: linear-gradient(135deg, #0F172A 0%, #111827 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-circadian-card::after {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--accent-cyan-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-tagline {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .hero-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .hero-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      line-height: 1.6;
+    }
+
+    /* Prayers Grid */
+    .prayers-bar {
+      margin-top: 18px;
+    }
+    .prayers-bar-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-dim);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .prayers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+      gap: 10px;
+    }
+    .prayer-chip {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .prayer-chip-accent {
+      border-color: rgba(6, 182, 212, 0.4);
+      background: rgba(6, 182, 212, 0.06);
+    }
+    .prayer-name {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .prayer-time {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* 2-Column Dashboard Cards */
+    .dash-dual-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .content-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Streak Component */
+    .streak-big-stat {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .streak-num {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+      line-height: 1;
+    }
+    .streak-rank {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    /* Quick Wins Checklist */
+    .quickwins-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .quickwin-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #151D2E;
+      border: 1px solid var(--border-subtle);
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
+    }
+    .quickwin-item:hover {
+      border-color: var(--border-glow);
+    }
+    .quickwin-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-emerald);
+      cursor: pointer;
+    }
+    .quickwin-label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+    }
+    .quickwin-hint {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+
+    /* Buttons */
+    .btn-emerald {
+      background: var(--accent-emerald);
+      color: #022C22;
+      border: none;
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-emerald:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 0 16px var(--accent-emerald-glow);
+    }
+    .btn-subuh-done {
+      background: #134E4A;
+      color: #5EEAD4;
+      border: 1px solid #14B8A6;
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 700;
+      width: 100%;
+      cursor: default;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-gold {
+      background: var(--accent-gold);
+      color: #451A03;
+      border: none;
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-gold:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 0 16px var(--accent-gold-glow);
+    }
+
+    .btn-cyan {
+      background: var(--accent-cyan);
+      color: #082F49;
+      border: none;
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-cyan:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 0 16px var(--accent-cyan-glow);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-glow);
+      color: var(--text-main);
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover {
+      background: var(--card-hover);
+      border-color: var(--accent-cyan);
+    }
+
+    /* Hadits & Neuro Quote */
+    .quote-box {
+      background: #111827;
+      border-left: 3px solid var(--accent-cyan);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 14px 18px;
+      margin-top: 6px;
+    }
+    .quote-text {
+      font-size: 0.84rem;
+      font-style: italic;
+      color: #E2E8F0;
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+    .quote-ref {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ==========================================================================
+       KALKULATOR SIKLUS VIEW
+       ========================================================================== */
+    .calc-controls-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .calc-input-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .input-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .input-time-box {
+      background: #151D2E;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      font-size: 1.4rem;
+      font-weight: 700;
+      padding: 10px 16px;
+      outline: none;
+      font-family: inherit;
+      width: 100%;
+      transition: all 0.2s;
+    }
+    .input-time-box:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 12px var(--accent-cyan-glow);
+    }
+
+    .slider-container {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    input[type="range"] {
+      accent-color: var(--accent-cyan);
+      height: 6px;
+      background: #1E293B;
+      border-radius: var(--radius-full);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .calc-subnav {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 12px;
+    }
+    .calc-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 8px 14px;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+    }
+    .calc-tab-btn.active {
+      background: #151D2E;
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    .cycle-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .cycle-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      transition: all 0.2s;
+    }
+    .cycle-card:hover {
+      border-color: var(--border-glow);
+      background: var(--card-hover);
+    }
+    .cycle-card-golden {
+      border-color: rgba(245, 158, 11, 0.5);
+      background: linear-gradient(145deg, #181926 0%, #151824 100%);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.08);
+    }
+
+    .cycle-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .badge {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .badge-gold { background: rgba(245, 158, 11, 0.15); color: var(--accent-gold); border: 1px solid rgba(245, 158, 11, 0.35); }
+    .badge-emerald { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.35); }
+    .badge-cyan { background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.35); }
+    .badge-amber { background: rgba(217, 119, 6, 0.15); color: #FBBF24; border: 1px solid rgba(217, 119, 6, 0.35); }
+    .badge-rose { background: rgba(239, 68, 68, 0.15); color: var(--accent-rose); border: 1px solid rgba(239, 68, 68, 0.35); }
+    .badge-slate { background: rgba(100, 116, 139, 0.15); color: #CBD5E1; border: 1px solid rgba(100, 116, 139, 0.35); }
+
+    .cycle-hours {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .cycle-time-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .cycle-time {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-main);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn-alarm-set {
+      background: #1E293B;
+      color: #E2E8F0;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-alarm-set:hover {
+      background: var(--accent-cyan);
+      color: #082F49;
+      border-color: var(--accent-cyan);
+    }
+
+    .cycle-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* ==========================================================================
+       SMART QAILULLAH VIEW
+       ========================================================================== */
+    .qailullah-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .qailullah-radar-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .qailullah-radar-info h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+
+    .qailullah-radar-desc {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      max-width: 640px;
+      line-height: 1.5;
+    }
+
+    .qailullah-timer-wrapper {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 32px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .qailullah-duration-tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-duration-preset {
+      background: #151D2E;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 8px 18px;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-duration-preset.active {
+      background: var(--accent-cyan);
+      color: #082F49;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 14px var(--accent-cyan-glow);
+    }
+
+    /* Circular SVG Timer */
+    .circular-timer-box {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .circular-svg {
+      transform: rotate(-90deg);
+      width: 220px;
+      height: 220px;
+    }
+
+    .circle-bg {
+      fill: none;
+      stroke: #1E293B;
+      stroke-width: 10;
+    }
+
+    .circle-progress {
+      fill: none;
+      stroke: var(--accent-cyan);
+      stroke-width: 10;
+      stroke-linecap: round;
+      stroke-dasharray: 552.92; /* 2 * PI * 88 */
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 0.8s linear;
+    }
+
+    .timer-center-text {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timer-digits {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: var(--text-main);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .timer-sublabel {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--accent-cyan);
+      margin-top: 6px;
+    }
+
+    .timer-action-buttons {
+      display: flex;
+      gap: 14px;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    /* ==========================================================================
+       AUDIT & JURNAL VIEW
+       ========================================================================== */
+    .subview-switcher {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      background: #111827;
+      padding: 4px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+    .subview-btn {
+      flex: 1;
+      padding: 8px 14px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+    .subview-btn.active {
+      background: #1F2937;
+      color: var(--text-main);
+      border: 1px solid var(--border-glow);
+    }
+
+    /* Audit Questionnaire */
+    .audit-question-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .audit-q-num {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--accent-cyan);
+      margin-bottom: 4px;
+    }
+
+    .audit-q-title {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .audit-q-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .audit-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .audit-option-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #151D2E;
+      border: 1px solid var(--border-subtle);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .audit-option-label:hover {
+      border-color: var(--border-glow);
+      background: var(--card-hover);
+    }
+    .audit-option-label input[type="radio"] {
+      accent-color: var(--accent-cyan);
+      cursor: pointer;
+    }
+    .audit-option-text {
+      font-size: 0.84rem;
+      color: #E2E8F0;
+    }
+
+    /* Audit Result Card */
+    .audit-result-card {
+      background: linear-gradient(135deg, #111827 0%, #0F172A 100%);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 20px;
+    }
+
+    .audit-grade-circle {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 3px solid;
+    }
+    .audit-grade-letter {
+      font-size: 2.4rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .audit-score-num {
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .audit-res-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .audit-res-diag {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .audit-protocol-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+    }
+    .protocol-heading {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-emerald);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .protocol-list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .protocol-list li {
+      font-size: 0.85rem;
+      color: #E2E8F0;
+      padding-left: 20px;
+      position: relative;
+      line-height: 1.5;
+    }
+    .protocol-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--accent-emerald);
+      font-weight: 800;
+    }
+
+    /* Evening Journal Styles */
+    .journal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .journal-textarea {
+      width: 100%;
+      background: #151D2E;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.88rem;
+      outline: none;
+      resize: vertical;
+      min-height: 85px;
+      transition: all 0.2s;
+    }
+    .journal-textarea:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 12px var(--accent-cyan-glow);
+    }
+
+    .journal-entry-card {
+      background: #151D2E;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .journal-entry-date {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+    .journal-sec strong {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .journal-sec p {
+      font-size: 0.85rem;
+      color: #E2E8F0;
+    }
+
+    /* ==========================================================================
+       ENSIKLOPEDIA VIEW (SCIENTIFIC KNOWLEDGE & SUNNAH)
+       ========================================================================== */
+    .encyclopedia-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .article-tab-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .article-tab-btn.active {
+      background: var(--accent-cyan);
+      color: #082F49;
+      border-color: var(--accent-cyan);
+    }
+
+    .article-content {
+      display: none;
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      animation: fadeIn 0.2s ease-out;
+    }
+    .article-content.active {
+      display: block;
+    }
+
+    .article-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+    .article-meta {
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+      margin-bottom: 18px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+    }
+    .article-body p {
+      font-size: 0.9rem;
+      color: #CBD5E1;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .article-body h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin: 20px 0 8px 0;
+    }
+    .article-citations {
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 14px;
+      margin-top: 24px;
+    }
+    .article-citations h5 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      letter-spacing: 0.6px;
+      margin-bottom: 6px;
+    }
+    .article-citations ul {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .article-citations li {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       MOBILE BOTTOM NAVIGATION BAR
+       ========================================================================== */
+    nav.mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(7, 10, 17, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid var(--border-subtle);
+      padding: 8px 6px 12px 6px;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .mobile-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 0.68rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+    }
+    .mobile-nav-item svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+    }
+    .mobile-nav-item.active {
+      color: var(--accent-cyan);
+    }
+
+    /* ==========================================================================
+       MODALS & TOAST
+       ========================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      max-width: 440px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.8);
+      animation: modalPop 0.25s ease-out;
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 96px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1E293B;
+      color: #F8FAFC;
+      border: 1px solid var(--accent-cyan);
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      font-size: 0.84rem;
+      font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Responsive Queries */
+    @media (max-width: 768px) {
+      body {
+        padding-bottom: calc(72px + env(safe-area-inset-bottom, 16px));
+      }
+      nav.desktop-nav {
+        display: none;
+      }
+      nav.mobile-bottom-nav {
+        display: flex;
+        padding-bottom: max(12px, env(safe-area-inset-bottom, 16px));
+      }
+      header.app-header {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .brand-section {
+        flex: 1;
+      }
+      .header-actions {
+        flex-shrink: 0;
+      }
+      .header-center-info {
+        order: 3;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        padding-top: 6px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .header-clock {
+        font-size: 1.05rem;
+      }
+      .header-prayer-chip {
+        padding: 4px 10px;
+        font-size: 0.72rem;
+      }
+      .hero-circadian-card {
+        padding: 18px;
+      }
+      .prayers-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .dash-dual-grid {
+        grid-template-columns: 1fr;
+      }
+      .calc-input-row {
+        grid-template-columns: 1fr;
+      }
+      .qailullah-radar-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .audit-result-card {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       TOP BAR
+       ======================================================================== -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="brand-logo-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </div>
+      <div class="brand-titles">
+        <h1>X-BEGADANG <span class="brand-badge">AAA PRO</span></h1>
+      </div>
+    </div>
+
+    <div class="header-center-info">
+      <div class="header-clock" id="header-live-clock">--:--:--</div>
+      <div class="header-prayer-chip" id="header-next-prayer">
+        <span class="dot-indicator"></span>
+        <span>Menghitung jadwal sholat...</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn-icon" id="btn-open-settings" title="Pengaturan & Audio" onclick="openSettingsModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Active Alarm Banner -->
+  <div id="active-alarm-banner">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+      <span id="active-alarm-text">Alarm Aktif: 04:30</span>
+    </div>
+    <button onclick="cancelActiveAlarm()" style="background: transparent; border: none; color: #FCA5A5; font-size: 0.76rem; font-weight: 700; cursor: pointer;">Batalkan</button>
+  </div>
+
+  <!-- ========================================================================
+       MAIN APP BODY
+       ======================================================================== -->
+  <main class="app-body">
+
+    <!-- Desktop Navigation Tab Bar -->
+    <nav class="desktop-nav">
+      <button class="nav-tab-btn active" data-tab="dashboard" id="nav-btn-dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        DASHBOARD
+      </button>
+      <button class="nav-tab-btn" data-tab="kalkulator" id="nav-btn-kalkulator">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        KALKULATOR SIKLUS
+      </button>
+      <button class="nav-tab-btn" data-tab="qailullah" id="nav-btn-qailullah">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line></svg>
+        SMART QAILULLAH
+      </button>
+      <button class="nav-tab-btn" data-tab="audit" id="nav-btn-audit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        AUDIT & JURNAL
+      </button>
+      <button class="nav-tab-btn" data-tab="ensiklopedia" id="nav-btn-ensiklopedia">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        ENSIKLOPEDIA SAINS
+      </button>
+    </nav>
+
+    <!-- ======================================================================
+         VIEW 1: DASHBOARD
+         ====================================================================== -->
+    <section class="tab-view active" id="view-dashboard">
+      <div class="hero-circadian-card">
+        <div class="hero-tagline">ARCHITECTURE OF RECOVERY & FAJR STRENGTH</div>
+        <h2 class="hero-title">Kuasai Ritme Biologis, Bangkit Sebelum Fajar</h2>
+        <p class="hero-desc">
+          Tidur bukan sekadar memejamkan mata, melainkan sinkronisasi harmonis antara <em>Process S</em> (pembersihan Adenosine), <em>Process C</em> (ritme sirkadian SCN), dan kepatuhan Sunnah Nabawi untuk puncak energi fisik dan ketenangan jiwa.
+        </p>
+
+        <div class="prayers-bar">
+          <div class="prayers-bar-title">Jadwal Astronomis Sholat & Waktu Emas Fajar (Kemenag RI)</div>
+          <div class="prayers-grid" id="dashboard-prayers-grid">
+            <!-- Dynamic prayer times injected here -->
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-dual-grid">
+        <!-- Streak Pejuang Fajar -->
+        <div class="content-card">
+          <div class="card-head">
+            <h3 class="card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              Streak Bangun Subuh
+            </h3>
+            <span class="badge badge-gold">SUNNAH FAJAR</span>
+          </div>
+          <div class="streak-big-stat">
+            <div class="streak-num" id="streak-count-display">0 Hari</div>
+            <div class="streak-rank" id="streak-rank-display">Pejuang Kasur</div>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;">
+            Konsistensi bangun sebelum atau tepat saat adzan Subuh melatih <em>Cortisol Awakening Response</em> alami tubuh, menjaga energi stabil sepanjang hari.
+          </p>
+          <button id="btn-subuh-checkin" class="btn-emerald">
+            Catat Bangun Subuh Hari Ini (+1 Streak)
+          </button>
+        </div>
+
+        <!-- Quick Wins Pasca Salam -->
+        <div class="content-card">
+          <div class="card-head">
+            <h3 class="card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Quick Wins Anti-Tidur Pasca Subuh
+            </h3>
+            <span class="badge badge-emerald">DOPAMINE BOOSTER</span>
+          </div>
+          <div class="quickwins-list">
+            <label class="quickwin-item" onclick="toggleQuickWin('dzikir')">
+              <input type="checkbox" id="quickwin-dzikir">
+              <div class="quickwin-label">
+                <span>Dzikir Pagi Al-Ma'tsurat / Tasbih</span>
+                <span class="quickwin-hint">Menenangkan gelombang otak & mendatangkan keberkahan rezeki</span>
+              </div>
+            </label>
+            <label class="quickwin-item" onclick="toggleQuickWin('water')">
+              <input type="checkbox" id="quickwin-water">
+              <div class="quickwin-label">
+                <span>Minum 500ml Air Putih Suhu Ruang</span>
+                <span class="quickwin-hint">Rehidrasi seluler & memicu motilitas gastrointestinal</span>
+              </div>
+            </label>
+            <label class="quickwin-item" onclick="toggleQuickWin('sunlight')">
+              <input type="checkbox" id="quickwin-sunlight">
+              <div class="quickwin-label">
+                <span>Buka Jendela / Paparan Cahaya Fajar 10 Menit</span>
+                <span class="quickwin-hint">Menghentikan hormon Melatonin & merangsang Cortisol harian</span>
+              </div>
+            </label>
+            <label class="quickwin-item" onclick="toggleQuickWin('stretch')">
+              <input type="checkbox" id="quickwin-stretch">
+              <div class="quickwin-label">
+                <span>Peregangan Tubuh Ringan 5 Menit</span>
+                <span class="quickwin-hint">Meningkatkan aliran darah oksigen ke prefrontal cortex otak</span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Neuro & Islamic Wisdom Box -->
+      <div class="quote-box">
+        <div class="quote-text">
+          "Rasulullah ﷺ membenci tidur sebelum shalat Isya dan membenci berbincang-bincang (begadang sia-sia) sesudahnya."
+        </div>
+        <div class="quote-ref">HR. Bukhari No. 568 & Muslim No. 647 — Landasan Neuro-Sirkadian Sunnah</div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 2: KALKULATOR SIKLUS 90 MENIT
+         ====================================================================== -->
+    <section class="tab-view" id="view-kalkulator">
+      <div class="calc-controls-card">
+        <div class="calc-subnav">
+          <button class="calc-tab-btn active" id="calc-mode-wake-btn" onclick="toggleCalcMode('wake')">
+            🎯 Saya Mau Bangun Jam...
+          </button>
+          <button class="calc-tab-btn" id="calc-mode-sleepnow-btn" onclick="toggleCalcMode('sleepnow')">
+            🌙 Saya Mau Tidur Sekarang...
+          </button>
+        </div>
+
+        <div class="calc-input-row" id="calc-input-wake-row">
+          <div class="input-group">
+            <label class="input-label" for="calc-target-wake">Target Jam Bangun (Subuh / Aktivitas)</label>
+            <input type="time" id="calc-target-wake" class="input-time-box" value="04:30">
+          </div>
+          <div class="input-group">
+            <div class="input-label">
+              <span>Sleep Latency (Waktu Untuk Terlelap)</span>
+              <strong id="calc-latency-value" style="color: var(--accent-cyan);">14 mnt</strong>
+            </div>
+            <div class="slider-container">
+              <input type="range" id="calc-latency-slider" min="5" max="30" step="1" value="14">
+              <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-dim);">
+                <span>Cepat (5m)</span>
+                <span>Rata-Rata Manusia (14m)</span>
+                <span>Lambat (30m)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;">
+          💡 <strong>Prinsip Ilmiah Siklus 90 Menit:</strong> Satu siklus tidur normal berlangsung 90-110 menit (NREM 1 &rarr; NREM 2 &rarr; NREM 3 Deep Sleep &rarr; REM). Bangun tepat di akhir siklus 90 menit (saat tidur ringan NREM 1/REM) memastikan Anda bangun segar bugar <strong>tanpa pening</strong> (bebas <em>Sleep Inertia</em>).
+        </p>
+      </div>
+
+      <!-- Results Grid: Wake Target Mode -->
+      <div id="calc-container-wake">
+        <h3 style="font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-dim); margin-bottom: 14px;">
+          Rekomendasi Waktu Masuk Kamar Tidur Berdasarkan Siklus Ultradian:
+        </h3>
+        <div class="cycle-cards-grid" id="calc-bedtime-results">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Results Grid: Sleep Now Mode -->
+      <div id="calc-container-sleepnow" style="display: none;">
+        <h3 style="font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-dim); margin-bottom: 14px;">
+          Jika Anda Tidur Sekarang, Pasang Alarm Pada Salah Satu Waktu Optimal Berikut:
+        </h3>
+        <div class="cycle-cards-grid" id="calc-waketime-results">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 3: SMART QAILULLAH
+         ====================================================================== -->
+    <section class="tab-view" id="view-qailullah">
+      <div class="qailullah-container">
+        <!-- Live Day-Zone Radar -->
+        <div class="qailullah-radar-card">
+          <div class="qailullah-radar-info">
+            <h3>Radar Biologis & Sunnah Saat Ini</h3>
+            <div id="qailullah-live-zone-badge" class="badge badge-gold">ZONA EMAS SUNNAH & SIRKADIAN</div>
+            <p id="qailullah-live-zone-desc" class="qailullah-radar-desc">
+              Waktu terbaik qailullah sebelum/setelah Dzuhur sesuai hadits Shahih dan post-prandial circadian dip.
+            </p>
+          </div>
+          <div style="flex-shrink: 0;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.8">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Timer Workspace -->
+        <div class="qailullah-timer-wrapper">
+          <div class="qailullah-duration-tabs">
+            <button class="btn-duration-preset active" data-minutes="20">
+              ⚡ 20 Menit (NASA Power Nap)
+            </button>
+            <button class="btn-duration-preset" data-minutes="30">
+              ⏱️ 30 Menit (Ambang N2)
+            </button>
+            <button class="btn-duration-preset" data-minutes="90">
+              🛡️ 90 Menit (Siklus Restorasi Penuh)
+            </button>
+          </div>
+
+          <div class="circular-timer-box">
+            <svg class="circular-svg">
+              <circle class="circle-bg" cx="110" cy="110" r="88"></circle>
+              <circle class="circle-progress" id="qailullah-progress-circle" cx="110" cy="110" r="88"></circle>
+            </svg>
+            <div class="timer-center-text">
+              <div class="timer-digits" id="qailullah-timer-display">20:00</div>
+              <div class="timer-sublabel">REST & RECHARGE</div>
+            </div>
+          </div>
+
+          <div class="timer-action-buttons">
+            <button class="btn-emerald" id="qailullah-play-btn" style="flex: 2;">
+              MULAI QAILULLAH
+            </button>
+            <button class="btn-outline" id="qailullah-reset-btn" style="flex: 1;">
+              RESET
+            </button>
+          </div>
+        </div>
+
+        <!-- Scientific & Sunnah Notes on Qailullah -->
+        <div class="content-card">
+          <div class="card-head">
+            <h4 class="card-title" style="color: var(--accent-gold);">
+              🔬 Mengapa Tidur 20 Menit Segar & Tidur 45 Menit Bikin Pusing?
+            </h4>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
+            <strong>Temuan Riset NASA (Rosekind et al., 1994):</strong> Power nap selama 20 menit hanya menyentuh fase tidur ringan (NREM 1 dan awal NREM 2). Ini cukup untuk mereduksi adenosin sementara, meningkatkan daya respon pilot sebesar +34%, dan mendongkrak kewaspadaan sebesar +54% tanpa menyebabkan <em>Sleep Inertia</em>.<br><br>
+            Sebaliknya, jika Anda tidur 45-60 menit di siang hari, otak Anda sudah masuk ke fase tidur dalam gelombang delta (NREM 3). Memaksa bangun saat NREM 3 membuat aliran darah di korteks prefrontal belum stabil, sehingga Anda bangun dengan kondisi linglung, kepala berat, dan pening.
+          </p>
+          <div class="quote-box" style="margin-top: 8px;">
+            <div class="quote-text">
+              "Tidurlah qailullah (tidur siang), karena sesungguhnya setan tidak tidur siang."
+            </div>
+            <div class="quote-ref">HR. At-Thabrani dalam Al-Mu'jam Al-Ausath (No. 28) — Hasan</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 4: AUDIT TIDUR & JURNAL MALAM
+         ====================================================================== -->
+    <section class="tab-view" id="view-audit">
+      <div class="subview-switcher">
+        <button class="subview-btn active" id="subview-btn-audit" onclick="toggleAuditJournalView('audit')">
+          📊 Rapor Kesehatan Tidur (Grade A-F)
+        </button>
+        <button class="subview-btn" id="subview-btn-journal" onclick="toggleAuditJournalView('journal')">
+          ✍️ Jurnal Malam & Muhasabah (Worry Dump)
+        </button>
+      </div>
+
+      <!-- Subview Audit -->
+      <div id="subview-audit-content">
+        <div style="background: var(--card-bg); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 20px;">
+          <h2 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 6px;">Pittsburgh Sleep Quality Audit (PSQI Adapted)</h2>
+          <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.5;">
+            Jawab 10 parameter klinis dan kebiasaan biologis di bawah ini secara jujur untuk mendeteksi akar masalah tidur Anda, menghitung nilai rapor, dan merancang protokol pemulihan 7 hari yang presisi.
+          </p>
+        </div>
+
+        <div id="audit-questions-container">
+          <!-- 10 Questions injected by app.js -->
+        </div>
+
+        <button id="btn-submit-audit" class="btn-cyan" style="margin-top: 10px; margin-bottom: 30px;" disabled onclick="submitAudit()">
+          Hitung Rapor Tidur (0/10)
+        </button>
+
+        <div id="audit-result-view" style="display: none;">
+          <!-- Audit result rendered here -->
+        </div>
+      </div>
+
+      <!-- Subview Journal -->
+      <div id="subview-journal-content" style="display: none;">
+        <div class="content-card" style="margin-bottom: 20px;">
+          <div class="card-head">
+            <h3 class="card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              Cognitive Offloading (Pelepasan Beban Mental)
+            </h3>
+            <span class="badge badge-cyan">ANTI-OVERTHINKING</span>
+          </div>
+          <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.5;">
+            <strong>Riset Scullin et al. (Baylor University, JEP 2018):</strong> Menuliskan daftar hal yang mengganjal atau rencana esok hari selama 5 menit sebelum tidur terbukti mempercepat orang terlelap hingga <strong>9 menit lebih cepat</strong> dibanding yang tidak menulis, karena otak melepaskan beban <em>Cognitive Arousal</em>.
+          </p>
+
+          <div class="journal-form">
+            <div class="input-group">
+              <label class="input-label" for="journal-worry-dump">
+                <span>1. Worry Dump & Uneg-uneg (Keluarkan dari Kepala ke Layar)</span>
+              </label>
+              <textarea id="journal-worry-dump" class="journal-textarea" placeholder="Tuliskan apa saja yang membuat Anda cemas, deadline yang belum selesai, atau pikiran yang berputar-putar..."></textarea>
+            </div>
+
+            <div class="input-group">
+              <label class="input-label" for="journal-gratitude-list">
+                <span>2. Muhasabah Syukur (3 Hal Baik Hari Ini)</span>
+              </label>
+              <textarea id="journal-gratitude-list" class="journal-textarea" placeholder="1. Nikmat nafas dan kesehatan... 2. Pekerjaan yang terselesaikan... 3. Memaafkan semua orang sebelum tidur..."></textarea>
+            </div>
+
+            <button class="btn-emerald" onclick="saveJournalEntry()">
+              Simpan & Lepaskan Beban Pikiran Malam Ini
+            </button>
+          </div>
+        </div>
+
+        <!-- Adab Tidur Nabawi Card -->
+        <div class="content-card" style="margin-bottom: 20px;">
+          <div class="card-head">
+            <h4 class="card-title" style="color: var(--accent-emerald);">
+              🤲 Dzikir & Adab Sebelum Tidur Sesuai Sunnah
+            </h4>
+          </div>
+          <div style="font-size: 0.85rem; color: #E2E8F0; display: flex; flex-direction: column; gap: 10px; line-height: 1.6;">
+            <div>
+              <strong>1. Berwudhu & Kibaskan Tempat Tidur:</strong> Berwudhu seperti hendak sholat dan mengibaskan sprei/kasur 3 kali (HR. Bukhari No. 6320).
+            </div>
+            <div>
+              <strong>2. Posisi Tidur Miring ke Kanan:</strong> Berbaring di atas rusuk sebelah kanan dan meletakkan tangan kanan di bawah pipi kanan (HR. Bukhari No. 247).
+            </div>
+            <div>
+              <strong>3. Membaca 3 Qul & Ayat Kursi:</strong> Membaca Surat Al-Ikhlas, Al-Falaq, An-Nas ditiupkan ke kedua telapak tangan lalu diusapkan ke seluruh tubuh yang terjangkau (HR. Bukhari No. 5017).
+            </div>
+            <div>
+              <strong>4. Doa Tidur:</strong> <em>"Bismika Allahumma ahyaa wa bismika amuut"</em> (Dengan nama-Mu ya Allah aku hidup dan dengan nama-Mu aku mati).
+            </div>
+          </div>
+        </div>
+
+        <h3 style="font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-dim); margin-bottom: 12px;">
+          Riwayat Muhasabah & Pelepasan Beban
+        </h3>
+        <div id="journal-history-list">
+          <!-- Journal history populated here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 5: ENSIKLOPEDIA SAINS & SUNNAH
+         ====================================================================== -->
+    <section class="tab-view" id="view-ensiklopedia">
+      <div class="encyclopedia-tabs">
+        <button class="article-tab-btn active" id="art-btn-1" onclick="switchArticleTab(1)">1. Siklus 90m & Inertia</button>
+        <button class="article-tab-btn" id="art-btn-2" onclick="switchArticleTab(2)">2. Model Dua Proses Borbély</button>
+        <button class="article-tab-btn" id="art-btn-3" onclick="switchArticleTab(3)">3. Farmakokinetik Kafein</button>
+        <button class="article-tab-btn" id="art-btn-4" onclick="switchArticleTab(4)">4. Cahaya Biru & Melatonin</button>
+        <button class="article-tab-btn" id="art-btn-5" onclick="switchArticleTab(5)">5. Miring Kanan (Medis)</button>
+        <button class="article-tab-btn" id="art-btn-6" onclick="switchArticleTab(6)">6. Cortisol Fajar & Sunnah</button>
+        <button class="article-tab-btn" id="art-btn-7" onclick="switchArticleTab(7)">7. Riset NASA Qailullah</button>
+      </div>
+
+      <!-- Artikel 1 -->
+      <article class="article-content active" id="art-content-1">
+        <h2 class="article-title">Arsitektur Siklus 90 Menit & Mekanisme Sleep Inertia</h2>
+        <div class="article-meta">KLEITMAN & ASERINSKY (1953) • HARVARD MEDICAL SCHOOL SLEEP MEDICINE</div>
+        <div class="article-body">
+          <p>Tidur manusia bukanlah kondisi mati suri yang statis dan homogen, melainkan serangkaian fluktuasi ritmis yang diatur secara presisi oleh gelombang elektroensefalografi (EEG) otak yang dinamakan <em>Ultradian Rhythm</em> atau Siklus Tidur 90 Menit.</p>
+          <h4>Empat Tahap Dalam Setiap Siklus</h4>
+          <p><strong>1. NREM Stage 1 (N1 - Transisi):</strong> Gelombang alfa melambat menjadi gelombang teta (4–7 Hz). Terjadi sentakan mioklonik (hypnic jerks) dan penurunan tonus otot. Berlangsung sekitar 5% dari total siklus.</p>
+          <p><strong>2. NREM Stage 2 (N2 - Tidur Ringan Sejati):</strong> Ditandai dengan munculnya <em>Sleep Spindles</em> (letupan 12–14 Hz) dan <em>K-Complexes</em>. Terjadi konsolidasi memori faktual, frekuensi detak jantung melambat, dan suhu tubuh inti mulai turun. Menyumbang 45-55% dari siklus tidur.</p>
+          <p><strong>3. NREM Stage 3 (N3 - Slow Wave Sleep / Deep Sleep):</strong> Didominasi oleh gelombang Delta sinkron frekuensi rendah (0.5–2 Hz) bervoltase tinggi. Ini adalah fase pemulihan fisik mutlak: kelenjar hipofisis melepaskan Hormon Pertumbuhan (HGH), sistem imun diperkuat, dan <em>Glymphatic System</em> otak bekerja memompa cairan serebrospinal untuk membersihkan limbah metabolik beracun seperti beta-amiloid dan protein tau.</p>
+          <p><strong>4. REM Sleep (Rapid Eye Movement):</strong> Otak kembali aktif dengan pola EEG menyerupai saat sadar, namun otot tubuh mengalami atonia parsial (kelumpuhan sementara untuk mencegah tubuh bergerak mengikuti mimpi). Terjadi pemrosesan emosional dan sintesis kreativitas.</p>
+          <h4>Misteri Sleep Inertia (Mengapa Bangun Tidur Malah Pusing?)</h4>
+          <p>Jika alarm Anda berbunyi di tengah-tengah NREM Stage 3, otak Anda secara paksa dipaksa sadar saat masih dipenuhi gelombang Delta lambat. Aliran darah ke korteks prefrontal mengalami perlambatan sementara. Kondisi ini disebut <strong>Sleep Inertia</strong> (Tassi & Muzet, 2000), yang menyebabkan disorientasi kognitif, kelelahan, dan sakit kepala selama 30 hingga 60 menit. Dengan menghitung kelipatan 90 menit (misal 6 jam atau 7.5 jam), alarm berbunyi tepat di akhir siklus (saat tidur ringan N1/REM), sehingga Anda langsung bangun dengan kesegaran maksimal.</p>
+        </div>
+        <div class="article-citations">
+          <h5>Referensi Ilmiah:</h5>
+          <ul>
+            <li>Aserinsky, E., & Kleitman, N. (1953). Regularly occurring periods of eye motility, and concomitant phenomena, during sleep. Science, 118(3062), 273-274.</li>
+            <li>Tassi, P., & Muzet, A. (2000). Sleep inertia. Sleep Medicine Reviews, 4(4), 341-353.</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Artikel 2 -->
+      <article class="article-content" id="art-content-2">
+        <h2 class="article-title">Model Dua Proses Regulasi Tidur (Alexander Borbély, 1982)</h2>
+        <div class="article-meta">BORBÉLY & ACHERMANN (1999) • NEUROBIOLOGY OF SLEEP-WAKE REGULATION</div>
+        <div class="article-body">
+          <p>Mengapa kita mengantuk di malam hari dan segar di pagi hari? Konsensus neurobiologi modern bertumpu pada <strong>Two-Process Model of Sleep Regulation</strong> yang dirumuskan oleh Prof. Alexander Borbély pada tahun 1982.</p>
+          <h4>1. Proses S (Homeostatic Sleep Pressure)</h4>
+          <p>Proses S adalah akumulasi tekanan biologis untuk tidur yang berbanding lurus dengan durasi Anda terjaga. Setiap menit Anda bangun, sel-sel otak mengonsumsi Adenosine Triphosphate (ATP) sebagai energi. Produk sampingan dari pemecahan ATP ini adalah molekul <strong>Adenosine</strong>. Adenosine mengikat reseptor A1 dan A2A di basal forebrain dan ventrolateral preoptic nucleus (VLPO), yang secara bertahap menekan pusat kewaspadaan otak. Semakin lama Anda begadang, semakin tinggi tumpukan adenosin, menciptakan "Hutang Tidur" (Sleep Debt). Adenosin hanya dapat dihilangkan secara tuntas melalui tidur gelombang lambat (Slow Wave Sleep).</p>
+          <h4>2. Proses C (Circadian Oscillator)</h4>
+          <p>Proses C adalah ritme sirkadian 24 jam yang diatur oleh <em>Suprachiasmatic Nucleus</em> (SCN) di hipotalamus. Proses C tidak peduli berapa jam Anda sudah tidur; ia semata-mata merespons siklus terang-gelap bumi. Di pagi hari, Proses C merangsang kewaspadaan, dan di malam hari (mulai jam 21:00), ia memerintahkan kelenjar pineal memproduksi hormon Melatonin.</p>
+          <h4>Harmonisasi Keduanya</h4>
+          <p>Tidur berkualitas terjadi saat <em>Proses S</em> berada di puncak tertingginya (tekanan adenosin optimal) dan <em>Proses C</em> sedang membuka jendela sirkadian malam (melatonin tinggi). Bila Anda begadang melewati jam 02:00 malam, Anda mengalami desinkronisasi sirkadian di mana Proses C mulai menaikkan suhu tubuh menjelang fajar, membuat tidur Anda menjadi dangkal dan tidak menyegarkan.</p>
+        </div>
+        <div class="article-citations">
+          <h5>Referensi Ilmiah:</h5>
+          <ul>
+            <li>Borbély, A. A. (1982). A two-process model of sleep regulation. Human Neurobiology, 1(3), 195-204.</li>
+            <li>Borbély, A. A., & Achermann, P. (1999). Sleep homeostasis and models of sleep regulation. Journal of Biological Rhythms, 14(6), 557-568.</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Artikel 3 -->
+      <article class="article-content" id="art-content-3">
+        <h2 class="article-title">Farmakokinetik Kafein: Half-Life & Destruksi Deep Sleep</h2>
+        <div class="article-meta">DRAKE ET AL. (2013) • JOURNAL OF CLINICAL SLEEP MEDICINE</div>
+        <div class="article-body">
+          <p>Banyak orang merasa: <em>"Saya bisa minum kopi jam 8 malam dan tetap bisa tidur nyenyak jam 11 malam."</em> Namun rekaman polisomnografi laboratorium tidur membuktikan fakta sebaliknya.</p>
+          <h4>Bagaimana Kafein Bekerja Secara Molekuler?</h4>
+          <p>Kafein memiliki struktur molekul yang sangat mirip dengan Adenosine. Kafein bertindak sebagai <strong>antagonis kompetitif</strong> pada reseptor adenosin A1 dan A2A. Kafein tidak menghilangkan adenosin, melainkan hanya menutupi "gembok" reseptor tersebut sehingga otak tidak menyadari bahwa ia sebenarnya sedang kelelahan. Sementara itu, adenosin terus menumpuk di latar belakang. Saat efek kafein habis, banjir adenosin langsung menghantam reseptor, memicu fenomena <em>Caffeine Crash</em> hebat.</p>
+          <h4>Waktu Paruh (Half-Life & Quarter-Life)</h4>
+          <p>Kafein memiliki waktu paruh (<em>half-life</em>) rata-rata <strong>5 hingga 7 jam</strong>, dan seperempat paruh (<em>quarter-life</em>) sekitar <strong>10 hingga 12 jam</strong>. Artinya: jika Anda meminum secangkir kopi dengan 200 mg kafein pada jam 16:00 sore, maka pada jam 22:00 malam masih ada 100 mg kafein aktif yang beredar di otak Anda, dan pada jam 04:00 subuh masih tersisa 50 mg kafein!</p>
+          <h4>Penghancuran Gelombang Delta Slow-Wave Sleep</h4>
+          <p>Riset oleh Drake et al. (2013) membuktikan bahwa konsumsi kafein bahkan 6 jam sebelum tidur mengurangi durasi Slow Wave Sleep (tahap N3) hingga 30%. Meskipun orang tersebut terlelap, tidur mereka kehilangan kekuatan restoratif alaminya. Aturan emas: <strong>Hentikan semua asupan kafein minimal 8–10 jam sebelum jam tidur ideal Anda (maksimal pukul 14:00 siang)</strong>.</p>
+        </div>
+        <div class="article-citations">
+          <h5>Referensi Ilmiah:</h5>
+          <ul>
+            <li>Drake, C., Roehrs, T., Shambroom, J., & Roth, T. (2013). Caffeine effects on sleep taken 0, 3, or 6 hours before going to bed. Journal of Clinical Sleep Medicine, 9(11), 1195-1200.</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Artikel 4 -->
+      <article class="article-content" id="art-content-4">
+        <h2 class="article-title">Cahaya Biru, Melanopsin, & Supresi Hormon Melatonin</h2>
+        <div class="article-meta">CHANG ET AL. (2015) • PROCEEDINGS OF THE NATIONAL ACADEMY OF SCIENCES (PNAS)</div>
+        <div class="article-body">
+          <p>Mata manusia tidak hanya berfungsi untuk melihat visual benda, melainkan juga bertindak sebagai sensor waktu sirkadian primer tubuh melalui sel khusus di retina: <strong>Intrinsically Photosensitive Retinal Ganglion Cells (ipRGCs)</strong>.</p>
+          <h4>Sensitivitas Fotopigmen Melanopsin</h4>
+          <p>Sel ipRGCs mengandung fotopigmen fotoreseptor bernama <strong>Melanopsin</strong>, yang memiliki sensitivitas puncak pada panjang gelombang cahaya biru antara <strong>460 hingga 480 nanometer</strong>. Panjang gelombang inilah yang dipancarkan secara dominan oleh layar smartphone, tablet, laptop, dan lampu LED modern.</p>
+          <h4>Jalur Retinohipotalamik</h4>
+          <p>Saat cahaya biru mengenai sel ipRGCs pada malam hari, sinyal elektrik dihantarkan langsung melalui <em>Retinohypothalamic Tract</em> (RHT) ke Suprachiasmatic Nucleus (SCN). SCN menafsirkan sinyal ini sebagai: <em>"Bumi masih siang bolong!"</em> Akibatnya, SCN segera mematikan sinyal ke kelenjar pineal, menghentikan sekresi hormon Melatonin (hormon kantuk alami).</p>
+          <p>Studi Chang et al. (PNAS, 2015) di Harvard Medical School menunjukkan bahwa membaca gadget sebelum tidur menunda pelepasan melatonin hingga lebih dari 1.5 jam, memperpanjang latensi tidur, mengurangi fase REM, dan menyebabkan kelelahan akut keesokan paginya. Terapkan <strong>Digital Detox</strong> minimal 45–60 menit sebelum tidur untuk mengembalikan produksi melatonin alami tubuh Anda.</p>
+        </div>
+        <div class="article-citations">
+          <h5>Referensi Ilmiah:</h5>
+          <ul>
+            <li>Chang, A. M., Aeschbach, D., Duffy, J. F., & Czeisler, C. A. (2015). Evening use of light-emitting eReaders negatively affects sleep, circadian timing, and next-morning alertness. PNAS, 112(4), 1232-1237.</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Artikel 5 -->
+      <article class="article-content" id="art-content-5">
+        <h2 class="article-title">Fisiologi Medis Posisi Tidur Miring ke Kanan Sesuai Sunnah</h2>
+        <div class="article-meta">JOURNAL OF CLINICAL GASTROENTEROLOGY • AMERICAN JOURNAL OF CARDIOLOGY</div>
+        <div class="article-body">
+          <p>Rasulullah ﷺ bersabda kepada Al-Bara' bin 'Azib radhiyallahu 'anhu: <em>"Apabila engkau mendatangi tempat tidurmu, berwudhulah sebagaimana wudhumu untuk shalat, lalu berbaringlah di atas sisi tubuhmu sebelah kanan..."</em> (HR. Bukhari No. 247 & Muslim No. 2710).</p>
+          <p>Petunjuk Nabawi ini menyimpan keajaiban anatomi dan fisiologi tubuh manusia yang baru terungkap oleh kedokteran modern berabad-abad kemudian:</p>
+          <h4>1. Aspek Kardiologi (Meringankan Kerja Ventrikel Jantung)</h4>
+          <p>Secara anatomis, organ jantung manusia terletak di rongga mediastinum sebelah kiri dada, dengan apeks mengarah ke kiri bawah. Saat seseorang tidur miring ke sisi kiri, jantung akan tertekan oleh bobot organ paru-paru kanan yang lebih besar (tiga lobus) dan menekan dinding dada. Sebaliknya, saat berbaring miring ke sisi kanan, jantung berada di posisi atas yang menggantung bebas tanpa beban gravitasi organ tubuh lainnya, mengurangi tekanan hidrostatik dan meringankan beban kerja pemompaan ventrikel kiri jantung.</p>
+          <h4>2. Aspek Gastroenterologi (Mencegah GERD & Memperlancar Kimus)</h4>
+          <p>Lambung manusia (ventrikulus) memiliki kelengkungan kurvatura mayor di sisi kiri dan sfingter pilorus yang bermuara ke usus dua belas jari (duodenum) di sisi kanan bawah. Tidur miring ke kanan menempatkan pilorus di bagian bawah, memanfaatkan gaya gravitasi alami bumi untuk mengalirkan sisa makanan (kimus) secara lancar ke duodenum, mencegah refluks asam lambung (GERD) dan kembung.</p>
+          <h4>3. Patensi Saluran Pernapasan</h4>
+          <p>Posisi miring ke kanan mencegah lidah dan jaringan lunak palatum mole jatuh ke belakang menyumbat faring (hipofaring), yang merupakan penyebab utama ngorok (<em>snoring</em>) dan henti napas saat tidur (<em>Obstructive Sleep Apnea</em>).</p>
+        </div>
+        <div class="article-citations">
+          <h5>Referensi Ilmiah:</h5>
+          <ul>
+            <li>Katz, P. O., et al. (1994). Prolonged recumbent acid clearance: significance of body position in patients with GERD. Gastroenterology, 107(4), A108.</li>
+            <li>van Leeuwen, P., et al. (2013). Influence of posture on heart rate variability during sleep. American Journal of Physiology, 305(9), H1321-H1329.</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Artikel 6 -->
+      <article class="article-content" id="art-content-6">
+        <h2 class="article-title">Cortisol Awakening Response (CAR) & Keberkahan Waktu Fajar</h2>
+        <div class="article-meta">CZECHOSLOVAKIAN PSYCHONEUROENDOCRINOLOGY • SUNNAH KEBERKAHAN PAGI</div>
+        <div class="article-body">
+          <p>Banyak orang mengira kortisol hanyalah "hormon stres". Namun dalam kronobiologi, kortisol adalah hormon esensial yang membangkitkan metabolisme dan kesadaran manusia melalui fenomena yang disebut <strong>Cortisol Awakening Response (CAR)</strong>.</p>
+          <h4>Lonjakan Kortisol Fajar</h4>
+          <p>Dalam rentang 30 hingga 45 menit setelah terjaga di waktu fajar, kadar kortisol dalam serum darah melonjak tajam antara 50% hingga 75%. Lonjakan fisiologis yang sehat ini merangsang glukoneogenesis hati (menyediakan glukosa bagi otak), meningkatkan tekanan darah ke tingkat operasional, dan mengaktifkan reseptor dopamin.</p>
+          <h4>Bahaya Tidur Lagi Setelah Subuh</h4>
+          <p>Jika seseorang memaksakan diri untuk tidur kembali setelah sholat Subuh, lonjakan CAR terganggu. Tubuh kembali ke fase tidur fragmentasi yang dipenuhi gelombang teta-delta abnormal. Hasilnya: orang tersebut akan bangun jam 8 atau 9 pagi dengan kondisi tubuh lemas, pusing, sendi kaku, dan suasana hati yang buruk.</p>
+          <h4>Kearifan Hadits Rasulullah ﷺ</h4>
+          <p>Rasulullah ﷺ mendoakan umatnya secara khusus untuk waktu pagi: <em>"Allahumma baarik li-ummatii fii bukuurihaa"</em> (Ya Allah, berkahilah umatku pada waktu pagi mereka). (HR. Abu Dawud No. 2606, At-Tirmidzi No. 1212 - Shahih). Manfaatkan waktu fajar untuk Dzikir Pagi, paparan sinar matahari fajar, dan aktivitas produktif.</p>
+        </div>
+        <div class="article-citations">
+          <h5>Referensi Ilmiah:</h5>
+          <ul>
+            <li>Clow, A., et al. (2004). The cortisol awakening response: more than a measure of HPA axis function. Psychoneuroendocrinology, 29(8), 1083-1097.</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Artikel 7 -->
+      <article class="article-content" id="art-content-7">
+        <h2 class="article-title">Studi NASA Fatigue Countermeasures & Sunnah Qailullah</h2>
+        <div class="article-meta">ROSEKIND ET AL. (NASA AMES RESEARCH CENTER, 1994) • KRONOBIOLOGI SIESTA</div>
+        <div class="article-body">
+          <p>Pada tahun 1994, badan antariksa Amerika Serikat (NASA) melalui <em>Fatigue Countermeasures Program</em> melakukan studi legendaris terhadap para pilot penerbangan jarak jauh yang dipimpin oleh Dr. Mark Rosekind.</p>
+          <h4>Temuan Kuantitatif NASA Nap</h4>
+          <p>Studi ini meneliti dampak tidur siang singkat (durasi rata-rata 25.8 menit) terhadap kewaspadaan dan performa fisiologis. Hasilnya sangat spektakuler: pilot yang mengambil tidur siang mengalami peningkatan <strong>performa kerja sebesar 34%</strong> dan peningkatan <strong>kewaspadaan fisiologis (respons EEG) sebesar 54%</strong> dibandingkan kelompok kontrol yang tidak tidur siang.</p>
+          <h4>Waktu Optimal Sesuai Biologi Manusia</h4>
+          <p>Secara alami, tubuh manusia memiliki ritme sirkadian <em>biphasic</em> (dua fase). Sekitar 7 hingga 8 jam setelah bangun tidur pagi (yaitu sekitar pukul 12:00 – 13:30 siang), terjadi fenomena penurunan suhu inti tubuh yang disebut <em>Post-Prandial Dip</em>. Ini bukan sekadar karena kenyang makan siang, melainkan mekanisme internal jam biologis SCN.</p>
+          <p>Waktu ini bertepatan persis dengan waktu <strong>Qailullah</strong> yang dianjurkan dalam Islam, yaitu istirahat sejenak di sekitar waktu shalat Dzuhur. Sebaliknya, tidur setelah waktu Ashar sangat dilarang oleh tradisi medis Islam dan sains modern karena berbenturan dengan kurva kenaikan adenosin malam hari, yang dipastikan menyebabkan insomnia di malam harinya.</p>
+        </div>
+        <div class="article-citations">
+          <h5>Referensi Ilmiah:</h5>
+          <ul>
+            <li>Rosekind, M. R., et al. (1994). Crew Factors in Flight Operations IX: Effects of Planned Cockpit Rest on Crew Performance and Alertness in Long-Haul Operations. NASA Technical Memorandum 108839.</li>
+          </ul>
+        </div>
+      </article>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       MOBILE BOTTOM NAVIGATION
+       ======================================================================== -->
+  <nav class="mobile-bottom-nav">
+    <button class="mobile-nav-item active" data-tab="dashboard" onclick="switchTab('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Home</span>
+    </button>
+    <button class="mobile-nav-item" data-tab="kalkulator" onclick="switchTab('kalkulator')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+      <span>Siklus</span>
+    </button>
+    <button class="mobile-nav-item" data-tab="qailullah" onclick="switchTab('qailullah')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line></svg>
+      <span>Qailullah</span>
+    </button>
+    <button class="mobile-nav-item" data-tab="audit" onclick="switchTab('audit')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+      <span>Audit</span>
+    </button>
+    <button class="mobile-nav-item" data-tab="ensiklopedia" onclick="switchTab('ensiklopedia')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+      <span>Sains</span>
+    </button>
+  </nav>
+
+  <!-- ========================================================================
+       MODAL 1: ALARM RINGING POPUP
+       ======================================================================== -->
+  <div class="modal-backdrop" id="alarm-ring-modal">
+    <div class="modal-card" style="text-align: center; border-color: var(--accent-gold);">
+      <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(245, 158, 11, 0.15); border: 2px solid var(--accent-gold); display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+      </div>
+
+      <h2 id="alarm-ring-title" style="font-size: 1.45rem; font-weight: 800; color: #FFF;">WAKTU BANGUN TELAH TIBA!</h2>
+      <p id="alarm-ring-desc" style="font-size: 0.9rem; color: #CBD5E1; line-height: 1.5;">
+        Siklus tidur Anda telah tuntas dengan sempurna. Bangkit dengan segar tanpa pening, teguk air putih, dan raih keberkahan fajar!
+      </p>
+
+      <div style="display: flex; gap: 12px; margin-top: 10px;">
+        <button class="btn-gold" style="flex: 2;" onclick="dismissAlarm()">
+          SAYA SUDAH BANGUN (MATIKAN)
+        </button>
+        <button class="btn-outline" style="flex: 1;" onclick="snoozeAlarm(9)">
+          Snooze 9 Mnt
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 2: SETTINGS & SOUND
+       ======================================================================== -->
+  <div class="modal-backdrop" id="settings-modal">
+    <div class="modal-card">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <h3 style="font-size: 1.15rem; font-weight: 800;">Pengaturan & Profil Suara</h3>
+        <button onclick="closeSettingsModal()" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem;">&times;</button>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="settings-sound-profile">Profil Akustik Alarm (Web Audio Synth)</label>
+        <select id="settings-sound-profile" class="input-time-box" style="font-size: 0.95rem; padding: 10px;">
+          <option value="binaural">Binaural Fajar 432Hz / 528Hz (Harmonik Lembut)</option>
+          <option value="tibetan">Tibetan Singing Bowl (Resonansi Damai)</option>
+          <option value="chime">Harmonic Celesta Chime (Melodi Segar C-E-G)</option>
+          <option value="adzan">Melodi Akustik Pentatonic Fajar</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button id="btn-test-sound" class="btn-outline" style="width: 100%;">
+          Uji Suara Alarm
+        </button>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="settings-city-select">Lokasi Jadwal Sholat (Kemenag RI Offline)</label>
+        <select id="settings-city-select" class="input-time-box" style="font-size: 0.95rem; padding: 10px;" onchange="onCityChange(this.value)">
+          <option value="jakarta">Jakarta / Bogor / Depok / Tangerang / Bekasi (WIB / GMT+7)</option>
+          <option value="surabaya">Surabaya / Sidoarjo / Jawa Timur (WIB / GMT+7)</option>
+          <option value="bandung">Bandung / Jawa Barat (WIB / GMT+7)</option>
+          <option value="semarang">Semarang / Solo / DIY Yogyakarta (WIB / GMT+7)</option>
+          <option value="medan">Medan / Sumatera Utara (WIB / GMT+7)</option>
+          <option value="makassar">Makassar / Sulawesi Selatan (WITA / GMT+8)</option>
+          <option value="denpasar">Denpasar / Bali (WITA / GMT+8)</option>
+          <option value="jayapura">Jayapura / Papua (WIT / GMT+9)</option>
+        </select>
+      </div>
+
+      <button class="btn-emerald" onclick="closeSettingsModal()">
+        Simpan Pengaturan
+      </button>
+    </div>
+  </div>
+
+  <!-- Global Toast Notification -->
+  <div class="toast" id="global-toast">Notifikasi</div>
+
+  <script src="app.js"></script>
+  <script>
+    // Inline UI helpers
+    function toggleCalcMode(mode) {
+      document.querySelectorAll('.calc-tab-btn').forEach(b => b.classList.remove('active'));
+      const wakeRow = document.getElementById('calc-input-wake-row');
+      const wakeCont = document.getElementById('calc-container-wake');
+      const sleepCont = document.getElementById('calc-container-sleepnow');
+
+      if (mode === 'wake') {
+        document.getElementById('calc-mode-wake-btn').classList.add('active');
+        if (wakeRow) wakeRow.style.display = 'grid';
+        if (wakeCont) wakeCont.style.display = 'block';
+        if (sleepCont) sleepCont.style.display = 'none';
+        renderCalculatorBedtimes();
+      } else {
+        document.getElementById('calc-mode-sleepnow-btn').classList.add('active');
+        if (wakeRow) wakeRow.style.display = 'none';
+        if (wakeCont) wakeCont.style.display = 'none';
+        if (sleepCont) sleepCont.style.display = 'block';
+        renderCalculatorWakeTimes();
+      }
+    }
+
+    function toggleAuditJournalView(mode) {
+      document.querySelectorAll('.subview-btn').forEach(b => b.classList.remove('active'));
+      const auditContent = document.getElementById('subview-audit-content');
+      const journalContent = document.getElementById('subview-journal-content');
+
+      if (mode === 'audit') {
+        document.getElementById('subview-btn-audit').classList.add('active');
+        if (auditContent) auditContent.style.display = 'block';
+        if (journalContent) journalContent.style.display = 'none';
+      } else {
+        document.getElementById('subview-btn-journal').classList.add('active');
+        if (auditContent) auditContent.style.display = 'none';
+        if (journalContent) journalContent.style.display = 'block';
+      }
+    }
+
+    function openSettingsModal() {
+      const modal = document.getElementById('settings-modal');
+      if (modal) modal.classList.add('active');
+    }
+    function closeSettingsModal() {
+      const modal = document.getElementById('settings-modal');
+      if (modal) modal.classList.remove('active');
+      if (AudioEngine.isPlaying) {
+        AudioEngine.stop();
+        const soundTestBtn = document.getElementById('btn-test-sound');
+        if (soundTestBtn) soundTestBtn.textContent = 'Uji Suara Alarm';
+      }
+    }
+
+    function onCityChange(cityKey) {
+      const cities = {
+        jakarta: { lat: -6.2088, lon: 106.8456, name: 'Jakarta (WIB)', tz: 7 },
+        surabaya: { lat: -7.2575, lon: 112.7521, name: 'Surabaya (WIB)', tz: 7 },
+        bandung: { lat: -6.9175, lon: 107.6191, name: 'Bandung (WIB)', tz: 7 },
+        semarang: { lat: -6.9667, lon: 110.4167, name: 'Semarang (WIB)', tz: 7 },
+        medan: { lat: 3.5952, lon: 98.6722, name: 'Medan (WIB)', tz: 7 },
+        makassar: { lat: -5.1477, lon: 119.4327, name: 'Makassar (WITA)', tz: 8 },
+        denpasar: { lat: -8.6705, lon: 115.2126, name: 'Denpasar (WITA)', tz: 8 },
+        jayapura: { lat: -2.5337, lon: 140.7181, name: 'Jayapura (WIT)', tz: 9 }
+      };
+      if (cities[cityKey]) {
+        AppState.settings.lat = cities[cityKey].lat;
+        AppState.settings.lon = cities[cityKey].lon;
+        AppState.settings.tzOffset = cities[cityKey].tz;
+        AppState.settings.cityName = cities[cityKey].name;
+        saveState(AppState);
+        renderClockAndPrayers();
+        renderCalculatorBedtimes();
+        renderCalculatorWakeTimes();
+        renderQailullahZone();
+        triggerToast(`Lokasi diubah ke ${cities[cityKey].name}`);
+      }
+    }
+  </script>
+</body>
+</html>
