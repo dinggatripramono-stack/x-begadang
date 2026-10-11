@@ -1,0 +1,22 @@
+{
+  "name": "X-BEGADANG - Standalone Sleep Architecture & Sunnah Wake",
+  "short_name": "X-BEGADANG",
+  "description": "Aplikasi Mandiri Manajemen Tidur, Siklus 90 Menit, Smart Qailullah, dan Kebiasaan Bangun Subuh Sesuai Sains & Sunnah",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#070A11",
+  "theme_color": "#070A11",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
