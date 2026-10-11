@@ -61,7 +61,24 @@ let AppState = loadState();
 // ==========================================
 // 2. ASTRONOMICAL PRAYER TIMES ENGINE
 // ==========================================
-function calculatePrayerTimes(lat, lon, tzOffset, date = new Date()) {
+function getNowInTZ(tzOffset = 7) {
+  const now = new Date();
+  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+  return new Date(utc + (3600000 * tzOffset));
+}
+
+function getTimezoneLabel(tzOffset = 7) {
+  if (tzOffset === 7) return 'WIB';
+  if (tzOffset === 8) return 'WITA';
+  if (tzOffset === 9) return 'WIT';
+  const sign = tzOffset >= 0 ? '+' : '';
+  return `GMT${sign}${tzOffset}`;
+}
+
+function calculatePrayerTimes(lat, lon, tzOffset, date = null) {
+  if (!date) {
+    date = getNowInTZ(tzOffset);
+  }
   const year = date.getFullYear();
   let month = date.getMonth() + 1;
   const day = date.getDate();
@@ -177,7 +194,7 @@ function calculateBedtimesForWake(wakeTimeStr, latencyMin = 14) {
 }
 
 function calculateWakeTimesForSleepNow(latencyMin = 14) {
-  const now = new Date();
+  const now = getNowInTZ(AppState.settings.tzOffset);
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
   const cycleDefinitions = [
@@ -209,7 +226,10 @@ function calculateWakeTimesForSleepNow(latencyMin = 14) {
 // ==========================================
 // 4. QAILULLAH RADAR & NAP ENGINE
 // ==========================================
-function getQailullahZone(date = new Date()) {
+function getQailullahZone(date = null) {
+  if (!date) {
+    date = getNowInTZ(AppState.settings.tzOffset);
+  }
   const h = date.getHours() + date.getMinutes() / 60.0;
 
   if (h >= 11.5 && h <= 13.5) {
@@ -626,30 +646,34 @@ function initAlarmWatcher() {
   if (alarmCheckInterval) clearInterval(alarmCheckInterval);
 
   alarmCheckInterval = setInterval(() => {
-    if (!AppState.activeAlarm) return;
-
-    const now = Date.now();
-    if (now >= AppState.activeAlarm.timestamp) {
-      // Trigger alarm!
-      triggerAlarmRing(AppState.activeAlarm);
+    if (AppState.activeAlarm) {
+      renderActiveAlarmBanner(); // Live countdown update
+      const now = Date.now();
+      if (now >= AppState.activeAlarm.timestamp) {
+        // Trigger alarm!
+        triggerAlarmRing(AppState.activeAlarm);
+      }
     }
   }, 1000);
 }
 
 function setAlarmTime(hoursStr, minutesStr, label = 'Alarm Siklus Tidur') {
   const [targetH, targetM] = [parseInt(hoursStr), parseInt(minutesStr)];
+  const tzNow = getNowInTZ(AppState.settings.tzOffset);
   const now = new Date();
-  const target = new Date();
-  target.setHours(targetH, targetM, 0, 0);
 
-  // If target is in the past or right now, schedule for tomorrow
-  if (target.getTime() <= now.getTime()) {
-    target.setDate(target.getDate() + 1);
+  const curMinutes = tzNow.getHours() * 60 + tzNow.getMinutes();
+  const targetMinutes = targetH * 60 + targetM;
+  let diffMinutes = targetMinutes - curMinutes;
+  if (diffMinutes <= 0) {
+    diffMinutes += 1440;
   }
+
+  const targetTimestamp = now.getTime() + (diffMinutes * 60 * 1000) - (tzNow.getSeconds() * 1000);
 
   AppState.activeAlarm = {
     time: `${String(targetH).padStart(2, '0')}:${String(targetM).padStart(2, '0')}`,
-    timestamp: target.getTime(),
+    timestamp: targetTimestamp,
     label: label
   };
   saveState(AppState);
@@ -659,6 +683,8 @@ function setAlarmTime(hoursStr, minutesStr, label = 'Alarm Siklus Tidur') {
   if ('Notification' in window && Notification.permission === 'default') {
     Notification.requestPermission();
   }
+  const tzLabel = getTimezoneLabel(AppState.settings.tzOffset);
+  triggerToast(`Alarm aktif untuk ${AppState.activeAlarm.time} ${tzLabel}`);
 }
 
 function cancelActiveAlarm() {
@@ -813,20 +839,38 @@ function switchTab(tabId) {
   }
 }
 
+function getDateStrInTZ(tzDate) {
+  const y = tzDate.getFullYear();
+  const m = String(tzDate.getMonth() + 1).padStart(2, '0');
+  const d = String(tzDate.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
 function renderClockAndPrayers() {
   const clockEl = document.getElementById('header-live-clock');
   const dateEl = document.getElementById('header-live-date');
   const nextPrayerEl = document.getElementById('header-next-prayer');
 
-  const now = new Date();
-  const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  const dateStr = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const tzDate = getNowInTZ(AppState.settings.tzOffset);
+  const hh = String(tzDate.getHours()).padStart(2, '0');
+  const mm = String(tzDate.getMinutes()).padStart(2, '0');
+  const ss = String(tzDate.getSeconds()).padStart(2, '0');
+  const tzLabel = getTimezoneLabel(AppState.settings.tzOffset);
+  const timeStr = `${hh}:${mm}:${ss}`;
 
-  if (clockEl) clockEl.textContent = timeStr;
-  if (dateEl) dateEl.textContent = dateStr;
+  const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+  const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+  const dateStr = `${days[tzDate.getDay()]}, ${tzDate.getDate()} ${months[tzDate.getMonth()]} ${tzDate.getFullYear()}`;
+
+  if (clockEl) {
+    clockEl.innerHTML = `<span>${timeStr}</span> <span class="badge-tz">${tzLabel}</span>`;
+  }
+  if (dateEl) {
+    dateEl.textContent = `${dateStr} (GMT+${AppState.settings.tzOffset})`;
+  }
 
   // Calculate prayer times
-  const pt = calculatePrayerTimes(AppState.settings.lat, AppState.settings.lon, AppState.settings.tzOffset, now);
+  const pt = calculatePrayerTimes(AppState.settings.lat, AppState.settings.lon, AppState.settings.tzOffset, tzDate);
 
   // Render prayer bar in Dashboard
   const grid = document.getElementById('dashboard-prayers-grid');
@@ -852,7 +896,7 @@ function renderClockAndPrayers() {
 
   // Next prayer indicator
   if (nextPrayerEl && pt.raw) {
-    const curH = now.getHours() + now.getMinutes() / 60.0 + now.getSeconds() / 3600.0;
+    const curH = tzDate.getHours() + tzDate.getMinutes() / 60.0 + tzDate.getSeconds() / 3600.0;
     let nextName = 'Subuh Besok';
     let nextTimeStr = pt.Subuh;
     let nextRaw = (pt.raw.fajr + 24.0) % 24.0;
@@ -881,7 +925,7 @@ function renderClockAndPrayers() {
 
     nextPrayerEl.innerHTML = `
       <span class="dot-indicator"></span>
-      <span>${nextName} <strong>${nextTimeStr}</strong> (${diffH}j ${diffM}m lagi)</span>
+      <span>${nextName} <strong>${nextTimeStr} ${tzLabel}</strong> (${diffH}j ${diffM}m lagi)</span>
     `;
   }
 }
@@ -994,13 +1038,13 @@ function renderStreak() {
 }
 
 function checkInSubuh() {
-  const todayStr = new Date().toISOString().slice(0, 10);
+  const tzNow = getNowInTZ(AppState.settings.tzOffset);
+  const todayStr = getDateStrInTZ(tzNow);
   if (AppState.streak.lastCheckInDate === todayStr) return;
 
-  // Check if consecutive
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yestStr = yesterday.toISOString().slice(0, 10);
+  // Check if consecutive yesterday
+  const yesterday = new Date(tzNow.getTime() - 86400000);
+  const yestStr = getDateStrInTZ(yesterday);
 
   if (AppState.streak.lastCheckInDate === yestStr) {
     AppState.streak.count += 1;
@@ -1017,7 +1061,8 @@ function checkInSubuh() {
 }
 
 function renderQuickWins() {
-  const todayStr = new Date().toISOString().slice(0, 10);
+  const tzNow = getNowInTZ(AppState.settings.tzOffset);
+  const todayStr = getDateStrInTZ(tzNow);
   if (AppState.quickWins.date !== todayStr) {
     // Reset daily
     AppState.quickWins = {
@@ -1049,9 +1094,17 @@ function renderActiveAlarmBanner() {
   if (!banner) return;
 
   if (AppState.activeAlarm) {
-    const d = new Date(AppState.activeAlarm.timestamp);
-    const timeStr = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-    text.textContent = `Alarm Aktif: ${timeStr} • ${AppState.activeAlarm.label}`;
+    const now = Date.now();
+    const diffMs = AppState.activeAlarm.timestamp - now;
+    const tzLabel = getTimezoneLabel(AppState.settings.tzOffset);
+
+    if (diffMs > 0) {
+      const diffH = Math.floor(diffMs / (1000 * 60 * 60));
+      const diffM = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+      text.textContent = `Alarm Aktif: ${AppState.activeAlarm.time} ${tzLabel} • Berdering dalam ${diffH}j ${diffM}m lagi (${AppState.activeAlarm.label})`;
+    } else {
+      text.textContent = `Alarm Aktif: ${AppState.activeAlarm.time} ${tzLabel} • Waktunya bangun!`;
+    }
     banner.style.display = 'flex';
   } else {
     banner.style.display = 'none';

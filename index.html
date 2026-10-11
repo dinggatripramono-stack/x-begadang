@@ -150,6 +150,20 @@
       font-variant-numeric: tabular-nums;
       color: var(--text-main);
       letter-spacing: 1px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .badge-tz {
+      font-size: 0.65rem;
+      font-weight: 800;
+      background: rgba(6, 182, 212, 0.18);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      letter-spacing: 0.5px;
     }
 
     .header-date {
@@ -2050,13 +2064,14 @@
       <div class="input-group">
         <label class="input-label" for="settings-city-select">Lokasi Jadwal Sholat (Kemenag RI Offline)</label>
         <select id="settings-city-select" class="input-time-box" style="font-size: 0.95rem; padding: 10px;" onchange="onCityChange(this.value)">
-          <option value="jakarta">Jakarta / Bogor / Depok / Tangerang / Bekasi (WIB)</option>
-          <option value="surabaya">Surabaya / Sidoarjo / Jawa Timur (WIB)</option>
-          <option value="bandung">Bandung / Priangan (WIB)</option>
-          <option value="semarang">Semarang / Solo / DIY Yogyakarta (WIB)</option>
-          <option value="medan">Medan / Sumatera Utara (WIB)</option>
-          <option value="makassar">Makassar / Sulawesi Selatan (WITA)</option>
-          <option value="denpasar">Denpasar / Bali (WITA)</option>
+          <option value="jakarta">Jakarta / Bogor / Depok / Tangerang / Bekasi (WIB / GMT+7)</option>
+          <option value="surabaya">Surabaya / Sidoarjo / Jawa Timur (WIB / GMT+7)</option>
+          <option value="bandung">Bandung / Jawa Barat (WIB / GMT+7)</option>
+          <option value="semarang">Semarang / Solo / DIY Yogyakarta (WIB / GMT+7)</option>
+          <option value="medan">Medan / Sumatera Utara (WIB / GMT+7)</option>
+          <option value="makassar">Makassar / Sulawesi Selatan (WITA / GMT+8)</option>
+          <option value="denpasar">Denpasar / Bali (WITA / GMT+8)</option>
+          <option value="jayapura">Jayapura / Papua (WIT / GMT+9)</option>
         </select>
       </div>
 
@@ -2131,7 +2146,8 @@
         semarang: { lat: -6.9667, lon: 110.4167, name: 'Semarang (WIB)', tz: 7 },
         medan: { lat: 3.5952, lon: 98.6722, name: 'Medan (WIB)', tz: 7 },
         makassar: { lat: -5.1477, lon: 119.4327, name: 'Makassar (WITA)', tz: 8 },
-        denpasar: { lat: -8.6705, lon: 115.2126, name: 'Denpasar (WITA)', tz: 8 }
+        denpasar: { lat: -8.6705, lon: 115.2126, name: 'Denpasar (WITA)', tz: 8 },
+        jayapura: { lat: -2.5337, lon: 140.7181, name: 'Jayapura (WIT)', tz: 9 }
       };
       if (cities[cityKey]) {
         AppState.settings.lat = cities[cityKey].lat;
@@ -2140,6 +2156,9 @@
         AppState.settings.cityName = cities[cityKey].name;
         saveState(AppState);
         renderClockAndPrayers();
+        renderCalculatorBedtimes();
+        renderCalculatorWakeTimes();
+        renderQailullahZone();
         triggerToast(`Lokasi diubah ke ${cities[cityKey].name}`);
       }
     }
