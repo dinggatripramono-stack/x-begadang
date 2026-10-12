@@ -14,8 +14,9 @@ def run_qa():
     url = "http://127.0.0.1:8780/"
     console_errors = []
     
-    desktop_screenshot = r"C:\Users\ZAVIER\projects\x-begadang\screenshot_desktop.png"
-    mobile_screenshot = r"C:\Users\ZAVIER\projects\x-begadang\screenshot_mobile.png"
+    cur_dir = os.path.dirname(os.path.abspath(__file__))
+    desktop_screenshot = os.path.join(cur_dir, "screenshot_desktop.png")
+    mobile_screenshot = os.path.join(cur_dir, "screenshot_mobile.png")
     
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -77,7 +78,13 @@ def run_qa():
         
         # Click set alarm on first card
         page.locator("#calc-bedtime-results .btn-alarm-set").first.click()
+        page.wait_for_timeout(300)
+        confirm_modal = page.locator("#alarm-confirm-modal")
+        assert confirm_modal.is_visible(), "Alarm confirmation modal not visible"
+        print(f"  ✓ Alarm Confirmation Modal Verified: '{page.locator('#confirm-modal-time').text_content()}'")
+        page.locator("#alarm-confirm-modal button").click()
         page.wait_for_timeout(200)
+
         alarm_banner = page.locator("#active-alarm-banner")
         assert alarm_banner.is_visible(), "Active alarm banner not visible"
         print(f"  ✓ Alarm Set Banner Verified: '{page.locator('#active-alarm-text').text_content()}'")
@@ -165,11 +172,27 @@ def run_qa():
         mobile_page.goto(url, wait_until="networkidle")
         mobile_page.wait_for_timeout(500)
         
-        # Check mobile bottom nav bar visibility
+        # Check mobile bottom nav bar visibility and active tab switching
         mobile_nav = mobile_page.locator("nav.mobile-bottom-nav")
         assert mobile_nav.is_visible(), "Mobile bottom nav is not visible on mobile viewport"
         print("  ✓ Mobile Bottom Navigation Bar Verified & Active")
-        
+
+        # Test switching each mobile tab
+        tabs_to_test = ["kalkulator", "qailullah", "audit", "ensiklopedia", "dashboard"]
+        for tab in tabs_to_test:
+            btn = mobile_page.locator(f"nav.mobile-bottom-nav .mobile-nav-item[data-tab='{tab}']")
+            btn.click()
+            mobile_page.wait_for_timeout(200)
+            active_btn = mobile_page.locator("nav.mobile-bottom-nav .mobile-nav-item.active")
+            assert active_btn.get_attribute("data-tab") == tab, f"Tab {tab} did not get active class!"
+            active_view = mobile_page.locator(f"#view-{tab}.active")
+            assert active_view.is_visible(), f"View view-{tab} is not visible!"
+            print(f"  ✓ Mobile Nav Switch to '{tab}': Verified Active & Visible")
+
+        # Back to Dashboard for mobile screenshot
+        mobile_page.locator("nav.mobile-bottom-nav .mobile-nav-item[data-tab='dashboard']").click()
+        mobile_page.wait_for_timeout(300)
+
         # Take Mobile screenshot
         mobile_page.screenshot(path=mobile_screenshot, full_page=False)
         print(f"  ✓ Mobile Screenshot saved: {mobile_screenshot}")

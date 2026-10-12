@@ -670,9 +670,10 @@ function setAlarmTime(hoursStr, minutesStr, label = 'Alarm Siklus Tidur') {
   }
 
   const targetTimestamp = now.getTime() + (diffMinutes * 60 * 1000) - (tzNow.getSeconds() * 1000);
+  const timeFormatted = `${String(targetH).padStart(2, '0')}:${String(targetM).padStart(2, '0')}`;
 
   AppState.activeAlarm = {
-    time: `${String(targetH).padStart(2, '0')}:${String(targetM).padStart(2, '0')}`,
+    time: timeFormatted,
     timestamp: targetTimestamp,
     label: label
   };
@@ -683,8 +684,64 @@ function setAlarmTime(hoursStr, minutesStr, label = 'Alarm Siklus Tidur') {
   if ('Notification' in window && Notification.permission === 'default') {
     Notification.requestPermission();
   }
+
+  // 1. Android Native Bridge integration
+  let isNative = false;
+  if (window.AndroidBridge && typeof window.AndroidBridge.setSystemAlarm === 'function') {
+    try {
+      const ok = window.AndroidBridge.setSystemAlarm(targetH, targetM, `X-BEGADANG: ${label}`);
+      if (ok) isNative = true;
+    } catch (e) {
+      console.warn('Native alarm bridge failed:', e);
+    }
+  }
+
+  // 2. Show clear confirmation modal to Boss Dingga
+  showAlarmConfirmationModal(timeFormatted, label, isNative, diffMinutes);
+}
+
+function showAlarmConfirmationModal(timeStr, label, isNative, diffMinutes) {
+  const modal = document.getElementById('alarm-confirm-modal');
+  const timeEl = document.getElementById('confirm-modal-time');
+  const statusEl = document.getElementById('confirm-modal-status');
+  const tipEl = document.getElementById('confirm-modal-tip');
   const tzLabel = getTimezoneLabel(AppState.settings.tzOffset);
-  triggerToast(`Alarm aktif untuk ${AppState.activeAlarm.time} ${tzLabel}`);
+
+  const diffH = Math.floor(diffMinutes / 60);
+  const diffM = diffMinutes % 60;
+  const inTimeStr = diffH > 0 ? `${diffH} jam ${diffM} menit lagi` : `${diffM} menit lagi`;
+
+  if (timeEl) timeEl.textContent = `${timeStr} ${tzLabel}`;
+
+  if (isNative) {
+    if (statusEl) {
+      statusEl.innerHTML = `<span style="color: #34D399; font-weight: 700;">✓ TERSINKRONISASI KE JAM ALARM HP ANDROID!</span><br><span style="font-size: 0.85rem; color: #94A3B8;">Alarm disetel berdering dalam <strong>${inTimeStr}</strong> (${label})</span>`;
+    }
+    if (tipEl) {
+      tipEl.innerHTML = `
+        <div style="color: #38BDF8; font-weight: 700; margin-bottom: 4px;">🚀 100% PASTI BERDERING DI HP ANDA</div>
+        Alarm telah didaftarkan langsung ke aplikasi Jam bawaan HP Samsung/Android Anda. Sistem operasi Android menjamin alarm akan <strong>berdering dengan suara kencang dan layar menyala</strong>, meskipun layar HP mati, HP terkunci, atau aplikasi ditutup.
+      `;
+    }
+  } else {
+    if (statusEl) {
+      statusEl.innerHTML = `<span style="color: #34D399; font-weight: 700;">✓ ALARM INTERNAL X-BEGADANG AKTIF</span><br><span style="font-size: 0.85rem; color: #94A3B8;">Waktu bangun: <strong>${timeStr} ${tzLabel}</strong> (dalam ${inTimeStr})</span>`;
+    }
+    if (tipEl) {
+      tipEl.innerHTML = `
+        <div style="color: #FBBF24; font-weight: 700; margin-bottom: 4px;">💡 PANDUAN KEPASTIAN ALARM DI HP</div>
+        <p style="margin-bottom: 6px;">Jika Anda membuka via Web Browser, browser HP bisa dibekukan saat layar HP mati lama. <strong>Untuk jaminan 100% berdering saat tidur lelap:</strong></p>
+        <p>Gunakan aplikasi <strong>X-BEGADANG APK Native</strong> (yang otomatis menyetel jam alarm Samsung) atau aktifkan alarm di aplikasi Jam bawaan HP Anda pada pukul <strong>${timeStr}</strong>.</p>
+      `;
+    }
+  }
+
+  if (modal) modal.classList.add('active');
+}
+
+function closeAlarmConfirmModal() {
+  const modal = document.getElementById('alarm-confirm-modal');
+  if (modal) modal.classList.remove('active');
 }
 
 function cancelActiveAlarm() {
@@ -823,12 +880,23 @@ function switchTab(tabId) {
   // Hide all sections
   document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-tab-btn').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
 
   const targetView = document.getElementById(`view-${tabId}`);
   const targetBtn = document.getElementById(`nav-btn-${tabId}`);
+  const targetMobileBtn = document.querySelector(`.mobile-nav-item[data-tab="${tabId}"]`);
 
-  if (targetView) targetView.classList.add('active');
+  if (targetView) {
+    targetView.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
   if (targetBtn) targetBtn.classList.add('active');
+  if (targetMobileBtn) targetMobileBtn.classList.add('active');
+
+  // Trigger haptic vibration if supported on phone
+  if (window.navigator && window.navigator.vibrate) {
+    try { window.navigator.vibrate(15); } catch (e) {}
+  }
 
   // Trigger specific refreshes if needed
   if (tabId === 'kalkulator') {
@@ -954,7 +1022,7 @@ function renderCalculatorBedtimes() {
         <span class="cycle-time">${item.bedtime}</span>
         <button class="btn-alarm-set" onclick="setAlarmTime('${item.bedtime.split(':')[0]}', '${item.bedtime.split(':')[1]}', 'Tidur ${item.cycles} Siklus (${item.bedtime})')">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-          Setel Alarm Jam Ini
+          🔔 Pasang Alarm HP (${item.bedtime})
         </button>
       </div>
       <p class="cycle-desc">${item.desc}</p>
@@ -981,7 +1049,7 @@ function renderCalculatorWakeTimes() {
         <span class="cycle-time">${item.waketime}</span>
         <button class="btn-alarm-set" onclick="setAlarmTime('${item.waketime.split(':')[0]}', '${item.waketime.split(':')[1]}', 'Bangun ${item.cycles} Siklus (${item.waketime})')">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-          Pasang Alarm Bangun
+          🔔 Pasang Alarm HP (${item.waketime})
         </button>
       </div>
       <p class="cycle-desc">${item.desc}</p>
@@ -1292,9 +1360,16 @@ document.addEventListener('DOMContentLoaded', () => {
   renderClockAndPrayers();
   setInterval(renderClockAndPrayers, 1000);
 
-  // Setup tabs
+  // Setup tabs (Desktop & Mobile)
   document.querySelectorAll('.nav-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+      const tab = btn.getAttribute('data-tab');
+      switchTab(tab);
+    });
+  });
+  document.querySelectorAll('.mobile-nav-item').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
       const tab = btn.getAttribute('data-tab');
       switchTab(tab);
     });

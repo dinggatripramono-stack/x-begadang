@@ -37,29 +37,37 @@ jobs:
       - name: Prepare APK Asset
         run: |
           mkdir -p release-apk
-          cp android/app/build/outputs/apk/debug/app-debug.apk release-apk/X-BEGADANG-v1.0.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk release-apk/X-BEGADANG-v1.1.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk release-apk/x-begadang.apk
           ls -lh release-apk
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: X-BEGADANG-APK
-          path: release-apk/X-BEGADANG-v1.0.apk
+          path: release-apk/*
 
       - name: Create GitHub Release & Upload APK
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/heads/main')
         with:
-          tag_name: v1.0.0
-          name: "X-BEGADANG v1.0.0 (Official Standalone Android APK)"
+          tag_name: v1.1.0
+          name: "X-BEGADANG DINGGA PRO v1.1 (Official Standalone Android APK)"
           body: |
-            ## 📱 X-BEGADANG — Neuro-Sleep Architecture & Sunnah Wake Engine
-            **Versi:** 1.0.0 Standalone Android Native APK
+            ## 📱 X-BEGADANG — DINGGA PRO v1.1
+            Aplikasi Mandiri Manajemen Tidur, Siklus 90 Menit, Smart Qailullah, dan Kebiasaan Fajar.
+            
+            ### ✨ Pembaruan v1.1:
+            - **Sinkronisasi Jam Alarm Bawaan HP (Samsung Clock):** Alarm disinkronkan langsung ke jam alarm sistem Android sehingga 100% DIJAMIN BERDERING kencang walau HP terkunci, layar mati, atau aplikasi ditutup!
+            - **Navigasi Tab Mobile Rapi:** Indikator tab aktif berpindah mulus dan bercahaya jelas saat diklik (Home, Siklus, Qailullah, Audit, Sains).
+            - **Panduan Lengkap Qailullah:** Penjelasan ilmiah dan Sunnah tentang manfaat tidur siang 20 menit (NASA Power Nap) dan bahaya tidur setelah Ashar.
+            - **Header DINGGA PRO v1.1:** Tampilan header eksklusif satu baris elegan.
             
             ### Cara Pasang di HP Android:
-            1. Download file `X-BEGADANG-v1.0.apk` di bawah ini langsung dari HP Anda.
+            1. Download file `X-BEGADANG-v1.1.apk` atau `x-begadang.apk` di bawah ini langsung dari HP Anda.
             2. Buka file yang selesai didownload, ketuk **Install**.
-            3. Aplikasi langsung terpasang mandiri di HP tanpa butuh PC dan tanpa langganan!
-          files: release-apk/X-BEGADANG-v1.0.apk
+          files: |
+            release-apk/X-BEGADANG-v1.1.apk
+            release-apk/x-begadang.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
